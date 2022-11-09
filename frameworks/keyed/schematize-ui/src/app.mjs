@@ -1,7 +1,7 @@
 
 import set from '@schematize/instance.js/src/Instance/set.mjs';
 import Collection_prototype_append from '@schematize/instance.js/src/Collection/append.mjs';
-import Collection_prototype_replace from '@schematize/instance.js/src/Collection/replace.mjs';
+// import Collection_prototype_replace from '@schematize/instance.js/src/Collection/replace.mjs';
 
 import {
   // dom
@@ -50,7 +50,25 @@ const buildData = (count = 1000) => {
   return data;
 };
 
+const scope = {
+  data: [],
+  selected: undefined,
+  updateSelected: (s) => {
 
+    // previous selected
+    let selected = scope.selected;
+    if (selected) {
+      set(`isSelected`, false, selected);
+    }
+
+    // new selected
+    set(`selected`, s, scope);
+    if (s) {
+      set(`isSelected`, true, s);
+    }
+
+  },
+};
 const app = c(S_div, null, {
   id: `main`,
 }, (el) => [
@@ -85,8 +103,7 @@ const app = c(S_div, null, {
                 addEventListener(el, S_click, () => {
                   // _.data = data;
                   set(`data`, buildData(), _);
-                  // _.selected = undefined;
-                  set(`selected`, undefined, _);
+                  _.updateSelected(undefined);
                 }),
                 [`Create 1,000 rows`]
               )),
@@ -101,7 +118,7 @@ const app = c(S_div, null, {
               }, (el, _ = el._) => (
                 addEventListener(el, S_click, () => {
                   set(`data`, buildData(10000), _);
-                  set(`selected`, undefined, _);
+                  _.updateSelected(undefined);
                 }),
                 [`Create 10,000 rows`]
               )),
@@ -134,7 +151,7 @@ const app = c(S_div, null, {
                     let item = data[i];
                     set(`label`, item.label + ' !!!', item);
                   }
-                  set(`selected`, undefined, _);
+                  _.updateSelected(undefined);
                 }),
                 [`Update every 10th row`]
               )),
@@ -149,7 +166,7 @@ const app = c(S_div, null, {
               }, (el, _ = el._) => (
                 addEventListener(el, S_click, () => {
                   set(`data`, [], _);
-                  set(`selected`, undefined, _);
+                  _.updateSelected(undefined);
                 }),
                 [`Clear`]
               )),
@@ -220,12 +237,7 @@ const app = c(S_div, null, {
                   }, (el, _ = el._) => (
                     addEventListener(el, S_click, (e) => {
                       e.preventDefault();
-                      if (_.selected) {
-                        set(`isSelected`, false, _.selected);
-                      }
-                      _.selected = _.item;
-                      set(`selected`, _.item, _);
-                      set(`isSelected`, true, _.selected);
+                      _.updateSelected(_.item);
                     }),
                     [
                       ct('', el, (n, _ = n._) => (
@@ -278,10 +290,7 @@ const app = c(S_div, null, {
       [`aria-hidden`]: `true`,
     }),
   ]),
-], {
-  data: [],
-  selected: undefined,
-});
+], scope);
 
 // finally append the application to the body
 append(document.body, app);

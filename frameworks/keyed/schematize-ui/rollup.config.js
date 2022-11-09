@@ -1,5 +1,5 @@
 import resolve from "@rollup/plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
+// import { terser } from "rollup-plugin-terser";
 
 export default {
   input: "src/app.mjs",
@@ -8,14 +8,14 @@ export default {
     format: "iife",
   },
   plugins: [
-    terser({
-      compress: {
-        reduce_vars: false
-      },
-      output: {
-        comments: false 
-      },
-    }),
+    // terser({
+    //   compress: {
+    //     reduce_vars: false
+    //   },
+    //   output: {
+    //     comments: false 
+    //   },
+    // }),
     resolve(),
   ],
 };

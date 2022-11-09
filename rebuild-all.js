@@ -41,6 +41,18 @@ var notRestarter = ([dir, name]) => {
 let skippable = _.takeWhile(frameworks, notRestarter);
 let buildable = _.slice(frameworks, skippable.length);
 
+// let index = buildable.findIndex((f) => {
+//   if (
+//     f[0] === 'non-keyed' &&
+//     f[1] === 'reflex-dom'
+//   ) {
+//     return true;
+//   }
+// });
+// if (index !== -1) {
+//   buildable = buildable.slice(index);
+// }
+
 console.log("Building ", buildable);
 
 
